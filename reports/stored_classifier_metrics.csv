@@ -1,0 +1,2 @@
+model_file,accuracy,precision,recall,f1_score,roc_auc
+best_investment_classifier.pkl,1.0,1.0,1.0,1.0,1.0

@@ -1,0 +1,2 @@
+model_file,rmse,mae,r2
+best_future_price_regressor.pkl,0.04625013094481472,0.009491454278655085,0.999999951115126
