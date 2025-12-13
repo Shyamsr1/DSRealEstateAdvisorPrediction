@@ -45,9 +45,9 @@ def load_artifacts():
     return metadata, clf, reg
 
 
-# ---------------- FIX (1) + FIX (4)
+# ---------------- 
 # - Keep ALL relevant cols needed for dropdown mapping + charts (including Price_in_Lakhs)
-# - Don’t accidentally drop columns like Facing/Security if they exist in dataset
+# - No drop columns like Facing/Security if they exist in dataset
 # ----------------
 @st.cache_data
 def load_reference_data(feature_columns: list[str] | None = None):
@@ -188,7 +188,7 @@ def try_get_feature_importance(pipeline):
     return feat_names, model.feature_importances_
 
 
-# ---------------- FIX (1)
+# ----------------
 # - robust options helper (no "nan", no blanks)
 # ----------------
 def safe_unique(df, col, fallback):
@@ -201,9 +201,8 @@ def safe_unique(df, col, fallback):
     return fallback
 
 
-# ---------------- FIX (2)
-# - probability should be 0..1; your UI showed 826387% => proba got corrupted/out-of-scale
-# - this makes it safe + works even if model has decision_function but no predict_proba
+# ----------------
+# - probability should be 0..1 range, never crazy numbers
 # ----------------
 def get_probability_good_investment(model, X) -> float | None:
     # preferred path
@@ -259,7 +258,7 @@ defaults = compute_defaults_from_data(ref_df, feature_columns)
 st.sidebar.header("⚙️ Property Input Form")
 
 
-# ---------------- FIX (1)
+# ----------------
 # - Proper State -> City -> Locality mapping (dependent dropdowns)
 # - City list is filtered by selected State
 # - Locality list is filtered by selected City (within selected State)
@@ -392,7 +391,7 @@ run = st.button("Run Prediction")
 
 if run:
     with mlflow.start_run():
-        # ---------------- FIX (3)
+        # ---------------- 
         # - prevent NameError issues (raw_inputs ALWAYS defined)
         # - log only user_inputs (not full feature row) for readability
         # ----------------
@@ -417,7 +416,7 @@ if run:
             label = "Good Investment" if int(inv_pred) == 1 else "Not Recommended"
             st.success(label)
 
-            # ---------------- FIX (2)
+            # ---------------- 
             # - confidence is always % (0..100), never a crazy lakhs-like number
             # ----------------
             if inv_prob is not None:
@@ -467,4 +466,4 @@ if run:
                 ax.tick_params(axis="x", rotation=45)
                 st.pyplot(fig, clear_figure=True)
             else:
-                st.caption("Add 'Price_in_Lakhs' and 'City' columns in your dataset to enable city price chart.")
+                st.caption("Add 'Price_in_Lakhs' and 'City' columns in  r dataset to enable city price chart.")
